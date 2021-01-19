@@ -1,0 +1,21 @@
+.container {
+    display: table;
+    overflow: hidden;
+    margin: 0px auto;
+    height: 100%;
+}
+
+.wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+form {
+    margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "entryFile": "src/server.ts",
+    "controllerPathGlobs": ["src/controllers/index.ts"],
+    "basePath": "/api/v1",
+    "spec": {
+        "outputDirectory": "build",
+        "specVersion": 3
+      },
+    "routes": {
+        "basePath": "/api/v1",
+        "routesDir": "build",
+        "middleware": "koa"
+    }
+}
