@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from "react"
+import { AuthContext } from "contexts/AuthProvider"
+import React, { useContext } from "react"
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
 import "./App.scss"
-import { BrowserRouter, Switch, Route } from "react-router-dom"
 import Login from "./pages/auth/Login"
-import PrivateRoute from "./Routes"
 import OrderDetails from "./pages/orders/OrderDetails"
 import OrderList from "./pages/orders/OrderList"
+import PrivateRoute from "./PrivateRoutes"
 
-function App() {
-    const [token, setToken] = useState("")
-
-    useEffect(() => {
-        async function getToken() {
-            //   setToken(await AuthService || "")
-        }
-        getToken()
-    }, [])
+const App: React.FC = () => {
+    const { auth }: any = useContext(AuthContext)
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/login" component={Login} />
-                <PrivateRoute path="/" component={OrderList} />
+                <PrivateRoute exact path="/" component={OrderList} />
+                {!auth.loading && !Boolean(auth.token) && (
+                    <Route path="/login" component={Login} />
+                )}
                 <PrivateRoute path="/details" component={OrderDetails} />
+                <Route>
+                    <Redirect to="/" />
+                </Route>
             </Switch>
         </BrowserRouter>
     )

@@ -50,7 +50,7 @@ RegisterRoutes(router)
  */
 app.use(async (ctx: Context, next: Next) => {
     const auth: AuthResponse = await AuthService.authenticate(ctx.header?.token)
-    if (auth?.uid) {
+    if (Boolean(auth?.uid)) {
         await next()
     } else {
         ctx.status = 401

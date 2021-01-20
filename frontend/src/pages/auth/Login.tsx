@@ -8,11 +8,21 @@ import Typography from "@material-ui/core/Typography"
 import Alert from "@material-ui/lab/Alert"
 import { makeStyles } from "@material-ui/styles"
 import { AuthContext, AuthData } from "contexts/AuthProvider"
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
+import { connect } from "react-redux"
+import { Redirect, RouteComponentProps } from "react-router-dom"
 import AuthService from "services/Auth"
+import { RootState } from "store"
+import { AuthAction, setAuthUser } from "store/actions/Auth"
 import "./base.scss"
 
-const Login = (props: any) => {
+interface DispatchProps {
+    setAuthUser: (email: string, token: string) => AuthAction
+}
+
+interface Props extends RouteComponentProps<any>, DispatchProps {}
+
+const Login: React.FC<Props> = (props) => {
     const classes = styles(props)
     const year = new Date().getFullYear()
 
@@ -20,18 +30,22 @@ const Login = (props: any) => {
     const [message, setMessage] = useState("")
     const [password, setPassword] = useState("")
 
-    const { setAuthData }: any = useContext(AuthContext)
+    const [redirect, setRedirect] = useState(false)
+
+    const { auth, setAuthData }: any = useContext(AuthContext)
+
+    useEffect(() => {
+        setRedirect(Boolean(auth.token))
+    }, [auth.token])
 
     const onFormSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
-        const data = await AuthService.auth(email, password)
-        if (data.error) {
-            setMessage(data.message)
+        const authData = await AuthService.auth(email, password)
+        if (authData.error) {
+            setMessage(authData.message)
         } else {
-            setAuthData({
-                email: data.email,
-                token: data.token
-            })
+            setAuthData(false, authData.email, authData.token)
+            props.setAuthUser(authData.email, authData.token)
             props.history.replace("/")
         }
     }
@@ -124,4 +138,12 @@ const styles = makeStyles({
     },
 })
 
-export default Login
+const mapStateToProps = (state: RootState) => ({
+    auth: state.auth,
+})
+
+const mapDispatchToProps = {
+    setAuthUser,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

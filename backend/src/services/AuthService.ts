@@ -8,10 +8,14 @@ export interface AuthResponse {
 export class AuthService {
     public static async authenticate(token: string): Promise<AuthResponse> {
         try {
-            const user = await admin.auth().verifyIdToken(token)
+            const user = await admin.auth().verifyIdToken(token, true)
+            const metadataRef = admin.database().ref('metadata/' + user.uid);
+            console.log(metadataRef)
             return {
                 uid: user.uid,
             }
-        } catch (ex) {}
+        } catch (ex) {
+            console.log("Error", ex)
+        }
     }
 }
