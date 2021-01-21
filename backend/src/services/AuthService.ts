@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin"
+import admin from "../firebase"
 
 export interface AuthResponse {
     uid: string
@@ -8,7 +8,6 @@ export class AuthService {
     public static async authenticate(token: string): Promise<AuthResponse> {
         try {
             const user = await admin.auth().verifyIdToken(token, true)
-            const metadataRef = admin.database().ref('metadata/' + user.uid);
             return {
                 uid: user.uid,
             }

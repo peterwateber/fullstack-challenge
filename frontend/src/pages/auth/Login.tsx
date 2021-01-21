@@ -2,15 +2,14 @@ import Button from "@material-ui/core/Button"
 import Container from "@material-ui/core/Container"
 import FormControl from "@material-ui/core/FormControl"
 import Grid from "@material-ui/core/Grid"
-import { Theme, WithStyles } from "@material-ui/core/styles"
 import TextField from "@material-ui/core/TextField"
 import Typography from "@material-ui/core/Typography"
 import Alert from "@material-ui/lab/Alert"
 import { makeStyles } from "@material-ui/styles"
-import { AuthContext, AuthData } from "contexts/AuthProvider"
-import React, { useContext, useEffect, useState } from "react"
+import { AuthContext } from "contexts/AuthProvider"
+import React, { useContext, useState } from "react"
 import { connect } from "react-redux"
-import { Redirect, RouteComponentProps } from "react-router-dom"
+import { RouteComponentProps } from "react-router-dom"
 import AuthService from "services/Auth"
 import { RootState } from "store"
 import { AuthAction, setAuthUser } from "store/actions/Auth"
@@ -30,13 +29,8 @@ const Login: React.FC<Props> = (props) => {
     const [message, setMessage] = useState("")
     const [password, setPassword] = useState("")
 
-    const [redirect, setRedirect] = useState(false)
-
     const { auth, setAuthData }: any = useContext(AuthContext)
 
-    useEffect(() => {
-        setRedirect(Boolean(auth.token))
-    }, [auth.token])
 
     const onFormSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()

@@ -13,4 +13,17 @@ export default class Order {
         const { order } = await AsyncAction.get(token, `order/${uid}`)
         return order
     }
+
+    static async updateOrderDetails(
+        token: string,
+        uid: string,
+        title: string,
+        bookingDate: string
+    ): Promise<any> {
+        return await AsyncAction.post(token, "order/update", {
+            uid,
+            title,
+            bookingDate,
+        })
+    }
 }

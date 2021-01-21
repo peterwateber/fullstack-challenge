@@ -34,15 +34,28 @@ const AuthProvider: React.FC<Props> = (props) => {
         title: props.auth?.modal.title || "",
         message: props.auth?.modal.message,
     })
+    const [unauthorized, setUnauthorized] = useState(true)
+
+    const setGeneralError = (title: string, message: string) => {
+        setModal({
+            open: true,
+            title,
+            message
+        })
+        setUnauthorized(false)
+    }
 
     const handleModalClose = async () => {
-        await AuthService.signOut()
-        props.clearAuthUser()
         setModal({
             ...modal,
-            open: false
+            open: false,
         })
-        window.location.reload()
+
+        if (unauthorized) {
+            await AuthService.signOut()
+            props.clearAuthUser()
+            window.location.reload()
+        }
     }
 
     const setAuthData = (loading: boolean, email: string, token: string) => {
@@ -81,7 +94,7 @@ const AuthProvider: React.FC<Props> = (props) => {
     }, [props.auth])
 
     return (
-        <AuthContext.Provider value={{ auth, setAuthData }}>
+        <AuthContext.Provider value={{ auth, setAuthData, setGeneralError }}>
             <div className="container">
                 {props.children}
                 <Dialog
@@ -116,7 +129,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
     setAuthUser,
-    clearAuthUser
+    clearAuthUser,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthProvider)

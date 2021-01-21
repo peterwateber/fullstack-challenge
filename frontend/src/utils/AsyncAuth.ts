@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios"
+import axios, { AxiosError, AxiosResponse } from "axios"
 
 const API_URL = "/api/v1/"
 
@@ -17,6 +17,15 @@ export default class AsyncAction {
             error: true,
             title: "Authentication error.",
             message: "Authentication is required. You will need to login.",
+        }
+    }
+
+    static showServerError(err: AxiosError) {
+        return {
+            ...err,
+            error: true,
+            title: err.response?.data.title,
+            message: err.response?.data.message
         }
     }
 
@@ -50,7 +59,12 @@ export default class AsyncAction {
             )
             return response.data
         } catch (ex) {
-            return AsyncAction.showAuthError(ex)
+            if (ex.response.status === 401) {
+                return AsyncAction.showAuthError(ex)
+            } else  {
+                // mostly validation error
+                return AsyncAction.showServerError(ex)
+            }
         }
     }
 }
