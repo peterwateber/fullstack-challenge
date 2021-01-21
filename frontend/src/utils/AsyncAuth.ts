@@ -1,4 +1,3 @@
-import { ApiError } from "api-contract"
 import axios, { AxiosResponse } from "axios"
 
 const API_URL = "/api/v1/"
@@ -12,8 +11,13 @@ export default class AsyncAction {
         }
     }
 
-    static async showAuthError(error: ApiError) {
-        // show modal
+    static showAuthError(err: Error) {
+        return {
+            ...err,
+            error: true,
+            title: "Authentication error.",
+            message: "Authentication is required. You will need to login.",
+        }
     }
 
     static async get(
@@ -29,11 +33,7 @@ export default class AsyncAction {
             )
             return response.data
         } catch (ex) {
-            AsyncAction.showAuthError(ex)
-            return {
-                ...ex,
-                error: true,
-            }
+            return AsyncAction.showAuthError(ex)
         }
     }
 
@@ -49,6 +49,8 @@ export default class AsyncAction {
                 parameter
             )
             return response.data
-        } catch (ex) {}
+        } catch (ex) {
+            return AsyncAction.showAuthError(ex)
+        }
     }
 }

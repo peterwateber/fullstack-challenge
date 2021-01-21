@@ -2,10 +2,11 @@ import { AuthState } from "api-contract"
 import { AuthAction, AuthActionType } from "store/actions/Auth"
 
 const INITIAL_STATE: AuthState = {
-    loading: false,
+    loading: true,
     modal: {
         error: false,
         message: "",
+        title: ""
     },
     user: {
         email: undefined,
@@ -13,7 +14,7 @@ const INITIAL_STATE: AuthState = {
     },
 }
 
-export const AuthReducer = (
+const AuthReducer = (
     state = INITIAL_STATE,
     action: AuthAction
 ): AuthState => {
@@ -21,7 +22,7 @@ export const AuthReducer = (
         case AuthActionType.SET_AUTH_MODAL:
             return {
                 ...state,
-                loading: true,
+                loading: false,
                 ...action.payload,
             }
         case AuthActionType.SET_AUTH_USER:
@@ -31,7 +32,14 @@ export const AuthReducer = (
             )
             return {
                 ...state,
-                loading: true,
+                loading: false,
+                ...action.payload,
+            }
+        case AuthActionType.CLEAR_AUTH_USER:
+            window.localStorage.clear()
+            return {
+                ...state,
+                loading: false,
                 ...action.payload,
             }
         default:
@@ -40,3 +48,5 @@ export const AuthReducer = (
             }
     }
 }
+
+export default AuthReducer

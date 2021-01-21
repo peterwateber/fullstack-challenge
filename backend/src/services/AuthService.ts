@@ -1,4 +1,3 @@
-import Koa from "koa"
 import * as admin from "firebase-admin"
 
 export interface AuthResponse {
@@ -10,7 +9,6 @@ export class AuthService {
         try {
             const user = await admin.auth().verifyIdToken(token, true)
             const metadataRef = admin.database().ref('metadata/' + user.uid);
-            console.log(metadataRef)
             return {
                 uid: user.uid,
             }

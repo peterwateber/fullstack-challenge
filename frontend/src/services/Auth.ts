@@ -21,14 +21,7 @@ export default class AuthService {
     // }
 
     static async validateAuth(token: string | undefined): Promise<ApiError> {
-        try {
-            return await AsyncAction.get(token, "auth")
-        } catch (ex) {
-            return {
-                ...ex,
-                error: true,
-            }
-        }
+        return await AsyncAction.get(token, "auth")
     }
 
     static async auth(email: string, password: string) {

@@ -1,10 +1,15 @@
-import Modal from "@material-ui/core/Modal"
+import Button from "@material-ui/core/Button"
+import Dialog from "@material-ui/core/Dialog"
+import DialogActions from "@material-ui/core/DialogActions"
+import DialogContent from "@material-ui/core/DialogContent"
+import DialogContentText from "@material-ui/core/DialogContentText"
+import DialogTitle from "@material-ui/core/DialogTitle"
 import { AuthState } from "api-contract"
 import React, { createContext, useEffect, useState } from "react"
 import { connect } from "react-redux"
 import AuthService from "services/Auth"
 import { RootState } from "store"
-import { AuthAction, setAuthUser } from "store/actions/Auth"
+import { AuthAction, setAuthUser, clearAuthUser } from "store/actions/Auth"
 
 export const AuthContext = createContext({})
 
@@ -15,6 +20,7 @@ export interface AuthData {
 
 interface DispatchProps {
     setAuthUser: (email: string, token: string) => AuthAction
+    clearAuthUser: () => AuthAction
 }
 
 interface Props extends DispatchProps {
@@ -24,12 +30,19 @@ interface Props extends DispatchProps {
 const AuthProvider: React.FC<Props> = (props) => {
     const [auth, setAuth] = useState({ loading: true, email: "", token: "" })
     const [modal, setModal] = useState({
-        open: props.auth?.modal.error || false,
+        open: false,
+        title: props.auth?.modal.title || "",
         message: props.auth?.modal.message,
     })
 
-    const handleClose = () => {
-        setModal({ open: false, message: modal.message })
+    const handleModalClose = async () => {
+        await AuthService.signOut()
+        props.clearAuthUser()
+        setModal({
+            ...modal,
+            open: false
+        })
+        window.location.reload()
     }
 
     const setAuthData = (loading: boolean, email: string, token: string) => {
@@ -46,9 +59,20 @@ const AuthProvider: React.FC<Props> = (props) => {
 
     useEffect(() => {
         async function getToken() {
-            await AuthService.validateAuth(props.auth?.user?.token)
+            if (props.auth?.user?.token) {
+                const user = await AuthService.validateAuth(
+                    props.auth?.user?.token
+                )
+                if (user.error) {
+                    setModal({
+                        open: true,
+                        message: user.message,
+                        title: user.title,
+                    })
+                }
+            }
             setAuth({
-                loading: !props.auth?.loading,
+                loading: props.auth?.loading || false,
                 email: props.auth?.user?.email || "",
                 token: props.auth?.user?.token || "",
             })
@@ -60,9 +84,27 @@ const AuthProvider: React.FC<Props> = (props) => {
         <AuthContext.Provider value={{ auth, setAuthData }}>
             <div className="container">
                 {props.children}
-                <Modal open={modal.open} onClose={handleClose}>
-                    <strong>{modal.message}</strong>
-                </Modal>
+                <Dialog
+                    disableBackdropClick
+                    disableEscapeKeyDown
+                    open={modal.open}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {modal.title}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            {modal.message}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleModalClose} color="primary">
+                            Okay
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </AuthContext.Provider>
     )
@@ -74,6 +116,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
     setAuthUser,
+    clearAuthUser
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthProvider)

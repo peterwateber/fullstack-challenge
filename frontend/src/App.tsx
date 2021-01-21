@@ -16,7 +16,7 @@ const App: React.FC = () => {
                 {!auth.loading && !Boolean(auth.token) && (
                     <Route path="/login" component={Login} />
                 )}
-                <PrivateRoute path="/details" component={OrderDetails} />
+                <PrivateRoute path="/order/:id" component={OrderDetails} />
                 <Route>
                     <Redirect to="/" />
                 </Route>
