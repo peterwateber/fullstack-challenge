@@ -39,7 +39,6 @@ const Login: React.FC<Props> = (props) => {
         } else {
             setAuthData(false, authData.email, authData.token)
             props.setAuthUser(authData.email, authData.token)
-            props.history.replace("/")
         }
     }
 

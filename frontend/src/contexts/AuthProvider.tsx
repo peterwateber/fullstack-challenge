@@ -68,6 +68,11 @@ const AuthProvider: React.FC<Props> = (props) => {
             window.localStorage.getItem("authData") || "{}"
         ) as AuthData
         setAuthUser(authData.email, authData.token)
+        setAuth({
+            loading: false,
+            email: authData.email,
+            token: authData.token,
+        })
     }, [setAuthUser])
 
     useEffect(() => {
@@ -83,15 +88,15 @@ const AuthProvider: React.FC<Props> = (props) => {
                         title: user.title,
                     })
                 }
+                setAuth({
+                    loading: props?.auth?.loading || false,
+                    email: props.auth?.user?.email || "",
+                    token: props.auth?.user?.token || "",
+                })
             }
-            setAuth({
-                loading: props?.auth?.loading || false,
-                email: props.auth?.user?.email || "",
-                token: props.auth?.user?.token || "",
-            })
         }
         getToken()
-    }, [props.auth?.user])
+    }, [props.auth])
 
     return (
         <AuthContext.Provider value={{ auth, setAuthData, setGeneralError }}>

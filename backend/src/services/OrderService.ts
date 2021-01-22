@@ -5,7 +5,9 @@ import {
 } from "../utils/OrderTransformation"
 
 class OrderService {
-    constructor(private readonly db: admin.firestore.Firestore = admin.firestore()) {}
+    constructor(
+        private readonly db: admin.firestore.Firestore = admin.firestore()
+    ) {}
 
     async getAllOrder(): Promise<any> {
         const allSnapshot = await this.db.collection("orders").get()
@@ -37,10 +39,14 @@ class OrderService {
         title: string,
         bookingDate: string
     ): Promise<void> {
-        await this.db.collection("orders").doc(uid).update({
-            title,
-            bookingDate,
-        })
+        try {
+            await this.db.collection("orders").doc(uid).update({
+                title,
+                bookingDate,
+            })
+        } catch (ex) {
+            throw "No order found."
+        }
     }
 }
 

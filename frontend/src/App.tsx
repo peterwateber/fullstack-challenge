@@ -9,13 +9,14 @@ import PrivateRoute from "./PrivateRoutes"
 
 const App: React.FC = () => {
     const { auth }: any = useContext(AuthContext)
+    const hasNoCredentials = !auth.loading && !Boolean(auth.token)
     return (
         <BrowserRouter>
             <Switch>
-                <PrivateRoute exact path="/" component={OrderList} />
-                {!auth.loading && !Boolean(auth.token) && (
+                {hasNoCredentials && (
                     <Route path="/login" component={Login} />
                 )}
+                <PrivateRoute exact path="/" component={OrderList} />
                 <PrivateRoute path="/order/:id" component={OrderDetails} />
                 <Route>
                     <Redirect to="/" />

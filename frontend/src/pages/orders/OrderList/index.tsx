@@ -81,8 +81,6 @@ const OrderList: React.FC<Props> = (props) => {
         fetch()
     }, [getAllOrders, props.user?.token])
 
-    if (props.orderList.loading) return null
-
     return (
         <div className="wrapper">
             <Container maxWidth="lg">
@@ -102,7 +100,7 @@ const OrderList: React.FC<Props> = (props) => {
                                     id="tableTitle"
                                     component="div"
                                 >
-                                    Booking list
+                                    {props.orderList.loading && orderList.order.length === 0 ? "Loading..." : "Booking list"}
                                 </Typography>
                             </Toolbar>
                             <TableContainer>

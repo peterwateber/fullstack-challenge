@@ -4,8 +4,7 @@ import Grid from "@material-ui/core/Grid"
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
 import { AuthState } from "api-contract"
 import clsx from "clsx"
-import { AuthContext } from "contexts/AuthProvider"
-import React, { MouseEvent, useContext } from "react"
+import React, { MouseEvent } from "react"
 import { connect } from "react-redux"
 import { RouteComponentProps } from "react-router-dom"
 import AuthService from "services/Auth"
@@ -22,14 +21,11 @@ interface Props extends RouteComponentProps<any>, DispatchProps {
 }
 
 const OrderHeader: React.FC<Props> = (props) => {
-    const { setAuthData }: any = useContext(AuthContext)
-    
     const logout = async (event: MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
         await AuthService.signOut()
-        setAuthData(false, "", "")
+        window.location.href = "/login"
         props.clearAuthUser()
-        // window.location.reload()
     }
 
     const classes = useStyles()

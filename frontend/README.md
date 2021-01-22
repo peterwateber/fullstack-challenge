@@ -11,5 +11,6 @@ REACT_APP_storageBucket=<refer to firebase config>
 REACT_APP_messagingSenderId=<refer to firebase config>
 REACT_APP_appId=<refer to firebase config>
 ```
-- `$ npm run start` to start the Frontend service
+- `$ npm i` to install modules
+- `$ npm start` to start the Frontend service
 - Accessible via `http://localhost:3000`

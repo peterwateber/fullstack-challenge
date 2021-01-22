@@ -20,7 +20,7 @@ export default class Order {
         title: string,
         bookingDate: string
     ): Promise<any> {
-        return await AsyncAction.put(token, "order/update", {
+        return await AsyncAction.put(token, `order/${uid}`, {
             uid,
             title,
             bookingDate,

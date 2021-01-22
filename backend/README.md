@@ -5,7 +5,7 @@
 ```javascript
 FIREBASE_DB_URL=<refer to firebase backend config>
 ```
-
+- `$ npm i` to install modules
 - `$ npm run dev` to start the Backend service
 - Accessible via `http://localhost:3001`
 
