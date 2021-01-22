@@ -3,7 +3,7 @@ import serviceAccount from "../serviceACcountKey.json"
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as any),
-    databaseURL: "https://construyo-coding-challenge.firebaseio.com",
+    databaseURL: process.env.FIREBASE_DB_URL,
 })
 
 

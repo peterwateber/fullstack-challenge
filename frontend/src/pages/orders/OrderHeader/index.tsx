@@ -2,8 +2,10 @@ import Avatar from "@material-ui/core/Avatar"
 import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
+import { AuthState } from "api-contract"
 import clsx from "clsx"
-import React, { MouseEvent } from "react"
+import { AuthContext } from "contexts/AuthProvider"
+import React, { MouseEvent, useContext } from "react"
 import { connect } from "react-redux"
 import { RouteComponentProps } from "react-router-dom"
 import AuthService from "services/Auth"
@@ -14,15 +16,20 @@ interface DispatchProps {
     clearAuthUser: () => AuthAction
 }
 
-interface Props extends RouteComponentProps<any>, DispatchProps {}
+interface Props extends RouteComponentProps<any>, DispatchProps {
+    orderLoading: boolean
+    auth: AuthState
+}
 
 const OrderHeader: React.FC<Props> = (props) => {
+    const { setAuthData }: any = useContext(AuthContext)
     
     const logout = async (event: MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
         await AuthService.signOut()
+        setAuthData(false, "", "")
         props.clearAuthUser()
-        props.history.replace("/")
+        // window.location.reload()
     }
 
     const classes = useStyles()
@@ -47,7 +54,10 @@ const OrderHeader: React.FC<Props> = (props) => {
     )
 }
 
-const mapStateToProps = (state: RootState) => ({})
+const mapStateToProps = (state: RootState) => ({
+    orderLoading: state.orderList.loading,
+    auth: state.auth
+})
 
 const mapDispatchToProps = {
     clearAuthUser,

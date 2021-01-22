@@ -3,8 +3,7 @@ import { AuthState } from "api-contract"
 export enum AuthActionType {
     SET_AUTH_MODAL = "set/general/modal",
     SET_AUTH_USER = "set/general/user",
-    CLEAR_AUTH_USER = "set/general/clear",
-    SET_ORDER = "set/order",
+    CLEAR_AUTH_USER = "set/general/clear"
 }
 
 export interface AuthAction {
@@ -41,11 +40,3 @@ export const clearAuthUser = (): AuthAction => ({
         },
     },
 })
-
-
-
-// const getOrderDetails = (uid: string) => {
-//     return (dispatch) => {
-//         dispatch
-//     }
-// }

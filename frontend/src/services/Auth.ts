@@ -10,16 +10,6 @@ if (firebase.apps.length === 0) {
 }
 
 export default class AuthService {
-    // static checkUser() {
-    //     firebase.auth().onAuthStateChanged(function (user) {
-    //         if (user) {
-    //             console.log(user)
-    //         } else {
-    //             console.log("logged out")
-    //         }
-    //     })
-    // }
-
     static async validateAuth(token: string | undefined): Promise<ApiError> {
         return await AsyncAction.get(token, "auth")
     }

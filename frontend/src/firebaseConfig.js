@@ -1,9 +1,11 @@
-export default {
-  apiKey: "AIzaSyDf-i3-kecpDpJyG1uR-Jbf0fjXMPhO54U",
-  authDomain: "construyo-coding-challenge.firebaseapp.com",
-  databaseURL: "https://construyo-coding-challenge.firebaseio.com",
-  projectId: "construyo-coding-challenge",
-  storageBucket: "construyo-coding-challenge.appspot.com",
-  messagingSenderId: "275103082078",
-  appId: "1:275103082078:web:3d55c84dee230264"
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_apiKey,
+  authDomain: process.env.REACT_APP_authDomain,
+  databaseURL: process.env.REACT_APP_databaseURL,
+  projectId: process.env.REACT_APP_projectId,
+  storageBucket: process.env.REACT_APP_storageBucket,
+  messagingSenderId: process.env.REACT_APP_messagingSenderId,
+  appId: process.env.REACT_APP_appId
 }
+
+export default firebaseConfig

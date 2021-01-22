@@ -40,7 +40,7 @@ const AuthProvider: React.FC<Props> = (props) => {
         setModal({
             open: true,
             title,
-            message
+            message,
         })
         setUnauthorized(false)
     }
@@ -62,13 +62,13 @@ const AuthProvider: React.FC<Props> = (props) => {
         setAuth({ loading, email, token })
     }
 
-    // set once
+    const { setAuthUser } = props
     useEffect(() => {
         const authData = JSON.parse(
             window.localStorage.getItem("authData") || "{}"
         ) as AuthData
-        props.setAuthUser(authData.email, authData.token)
-    }, [])
+        setAuthUser(authData.email, authData.token)
+    }, [setAuthUser])
 
     useEffect(() => {
         async function getToken() {
@@ -85,13 +85,13 @@ const AuthProvider: React.FC<Props> = (props) => {
                 }
             }
             setAuth({
-                loading: props.auth?.loading || false,
+                loading: props?.auth?.loading || false,
                 email: props.auth?.user?.email || "",
                 token: props.auth?.user?.token || "",
             })
         }
         getToken()
-    }, [props.auth])
+    }, [props.auth?.user])
 
     return (
         <AuthContext.Provider value={{ auth, setAuthData, setGeneralError }}>

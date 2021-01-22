@@ -19,6 +19,8 @@ import { AuthResponse, AuthService } from "./services/AuthService"
 
 import "./firebase"
 
+require("dotenv").config()
+
 
 const app = new Koa()
 
@@ -29,7 +31,7 @@ app.use(helmet())
 app.use(cors())
 
 // Logger middleware -> use winston as logger (logging.ts with config)
-app.use(logger(winston))
+// app.use(logger(winston))
 
 // Enable bodyParser with default options
 app.use(bodyParser())

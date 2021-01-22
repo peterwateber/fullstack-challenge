@@ -15,7 +15,7 @@ import {
     MuiPickersUtilsProvider,
 } from "@material-ui/pickers"
 import { OrderCollection, UserState } from "api-contract"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import { connect } from "react-redux"
 import { RouteComponentProps } from "react-router-dom"
 import OrderService from "services/OrderService"
@@ -54,10 +54,10 @@ const OrderDetails: React.FC<Props> = (props) => {
         setTitle(value)
     }
 
-    const isFormInvalid = () => {
+    const isFormInvalid = useCallback(() => {
         const parsedDate = getTime(new Date(selectedDate || ""))
         return !Boolean(title) || !Boolean(parsedDate)
-    }
+    }, [selectedDate, title])
 
     const handleFormSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
@@ -86,14 +86,14 @@ const OrderDetails: React.FC<Props> = (props) => {
 
     useEffect(() => {
         setFormButton(isFormInvalid())
-    }, [title, selectedDate])
+    }, [isFormInvalid])
 
     useEffect(() => {
         if (editMode) {
             setSelectedDate(order?.bookingDate || null)
             setTitle(order?.title || "")
         }
-    }, [editMode])
+    }, [editMode, order])
 
     useEffect(() => {
         async function fetch() {
@@ -101,7 +101,10 @@ const OrderDetails: React.FC<Props> = (props) => {
                 props.user.token,
                 uid
             )
-            if (Boolean(Object.values(order).length)) {
+            if (
+                typeof order !== "undefined" &&
+                Boolean(Object.values(order).length)
+            ) {
                 setOrder({
                     ...order,
                     bookingDate: formatBookingDate(order?.bookingDate),
@@ -111,7 +114,7 @@ const OrderDetails: React.FC<Props> = (props) => {
             setLoading(false)
         }
         if (uid) fetch()
-    }, [uid])
+    }, [uid, props])
 
     return (
         <div className="wrapper">

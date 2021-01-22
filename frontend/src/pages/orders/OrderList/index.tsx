@@ -9,20 +9,20 @@ import TableContainer from "@material-ui/core/TableContainer"
 import TablePagination from "@material-ui/core/TablePagination"
 import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
+import { OrderListState, UserState } from "api-contract"
 import React, { useEffect, useState } from "react"
+import { connect } from "react-redux"
 import { RouteComponentProps } from "react-router-dom"
+import { Action } from "redux"
+import { ThunkAction } from "redux-thunk"
+import { RootState } from "store"
+import { getAllOrders } from "store/actions/Order"
 import OrderHeader from "../OrderHeader"
-import OrderTableHead from "./components/OrderTableHead"
 import OrderTableBody from "./components/OrderTableBody"
+import OrderTableHead from "./components/OrderTableHead"
 import "./style.scss"
 import { DataType, Order } from "./types/Common"
 import { tableRowDisplay } from "./utils/TableDisplayUtils"
-import { connect } from "react-redux"
-import { RootState } from "store"
-import { OrderResultState, UserState } from "api-contract"
-import { getAllOrders } from "store/actions/Order"
-import { Action } from "redux"
-import { ThunkAction } from "redux-thunk"
 
 interface DispatchProps {
     getAllOrders: (
@@ -32,12 +32,13 @@ interface DispatchProps {
 
 interface Props extends RouteComponentProps<any>, DispatchProps {
     user: UserState
-    orderList: OrderResultState
+    orderList: OrderListState
 }
 
 const OrderList: React.FC<Props> = (props) => {
     const classes = useStyles()
-    const { orderList } = props
+    const { getAllOrders } = props
+    const { orderList } = props.orderList
 
     const [order, setOrder] = useState<Order>("asc")
     const [orderBy, setOrderBy] = useState<keyof DataType>("title")
@@ -75,10 +76,12 @@ const OrderList: React.FC<Props> = (props) => {
 
     useEffect(() => {
         async function fetch() {
-            props.getAllOrders(props.user.token)
+            getAllOrders(props.user?.token)
         }
         fetch()
-    }, [props.user])
+    }, [getAllOrders, props.user?.token])
+
+    if (props.orderList.loading) return null
 
     return (
         <div className="wrapper">
@@ -113,7 +116,6 @@ const OrderList: React.FC<Props> = (props) => {
                                         order={order}
                                         orderBy={orderBy}
                                         onRequestSort={handleRequestSort}
-                                        rowCount={orderList.total}
                                     />
                                     <OrderTableBody
                                         rows={orderList.order.map((o) =>
@@ -168,7 +170,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         table: {
             minWidth: 800,
-            maxWidth: 800  
+            maxWidth: 800,
         },
         title: {
             padding: 0,
@@ -178,7 +180,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const mapStateToProps = (state: RootState) => ({
     user: state.auth.user,
-    orderList: state.orderList.orderList,
+    orderList: state.orderList,
 })
 
 const mapDispatchToProps = {

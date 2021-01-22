@@ -29,8 +29,7 @@ const Login: React.FC<Props> = (props) => {
     const [message, setMessage] = useState("")
     const [password, setPassword] = useState("")
 
-    const { auth, setAuthData }: any = useContext(AuthContext)
-
+    const { setAuthData }: any = useContext(AuthContext)
 
     const onFormSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()

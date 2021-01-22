@@ -16,6 +16,7 @@ export interface AuthState {
 }
 
 export interface OrderListState {
+    loading: boolean
     orderList: OrderResultState
 }
 

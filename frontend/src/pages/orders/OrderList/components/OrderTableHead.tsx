@@ -20,7 +20,6 @@ interface OrderTableHeadProps {
     ) => void
     order: Order
     orderBy: string
-    rowCount: number
 }
 
 const headCells: HeadCell[] = [
@@ -42,7 +41,7 @@ const headCells: HeadCell[] = [
 
 const OrderTableHead = (props: OrderTableHeadProps) => {
     const classes = useStyles()
-    const { order, orderBy, rowCount, onRequestSort } = props
+    const { order, orderBy, onRequestSort } = props
     const createSortHandler = (property: keyof DataType) => (
         event: React.MouseEvent<unknown>
     ) => {

@@ -25,7 +25,7 @@ export default class AsyncAction {
             ...err,
             error: true,
             title: err.response?.data.title,
-            message: err.response?.data.message
+            message: err.response?.data.message,
         }
     }
 
@@ -61,7 +61,29 @@ export default class AsyncAction {
         } catch (ex) {
             if (ex.response.status === 401) {
                 return AsyncAction.showAuthError(ex)
-            } else  {
+            } else {
+                // mostly validation error
+                return AsyncAction.showServerError(ex)
+            }
+        }
+    }
+
+    static async put(
+        token: string,
+        url: string,
+        parameter?: object
+    ): Promise<any> {
+        AsyncAction._setHeader(token)
+        try {
+            const response: AxiosResponse = await axios.put(
+                API_URL.concat(url),
+                parameter
+            )
+            return response.data
+        } catch (ex) {
+            if (ex.response.status === 401) {
+                return AsyncAction.showAuthError(ex)
+            } else {
                 // mostly validation error
                 return AsyncAction.showServerError(ex)
             }

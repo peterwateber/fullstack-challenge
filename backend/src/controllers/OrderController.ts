@@ -1,7 +1,7 @@
 import Koa from "koa"
-import { tagsAll } from "koa-swagger-decorator"
+import { request, tagsAll } from "koa-swagger-decorator"
 import OrderService from "../services/OrderService"
-import { Controller, Get, Post, Request, Route, SuccessResponse } from "tsoa"
+import { Controller, Get, Put, Request, Route, SuccessResponse } from "tsoa"
 import { sanitizeInput } from "../utils/SanitizeInput"
 
 @tagsAll(["order"])
@@ -29,11 +29,14 @@ export class OrderController extends Controller {
         }
     }
 
-    @Post("update")
+    @Put("{uid}")
     @SuccessResponse(204)
-    public async updateOrderDetails(@Request() request: Koa.Request) {
+    public async updateOrderDetails(
+        uid: string,
+        @Request() request: Koa.Request
+    ) {
         try {
-            const { uid, title, bookingDate } = sanitizeInput(request.body)
+            const { title, bookingDate } = sanitizeInput(request.body)
             await this.orderService.updateOrderDetails(uid, title, bookingDate)
         } catch (ex) {
             this.setStatus(400)
