@@ -1,5 +1,6 @@
+## Important
+- Backend and Frontend are in different services. Please follow `README` on each folder on how to start.
 #### The Task
-
 - Create and do the initial setup for a frontend project with React and a backend project with NodeJS.
 - Setup [firebase](https://firebase.google.com/docs) in your frontend and backend projects with the provided [firebase web config](./firebaseConfig.js) and [service account credential](./serviceAccountKey.json) files respectively.
 - Setup and create some basic unit tests for the application.

@@ -1,6 +1,6 @@
 #### Backend
 
-- Set the `.env` variable 
+- Set/Create the `.env` variable 
 
 ```javascript
 FIREBASE_DB_URL=<refer to firebase backend config>

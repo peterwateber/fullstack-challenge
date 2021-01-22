@@ -1,6 +1,6 @@
 #### Frontend
 
-- Set the `.env` variable 
+- Set/Create the `.env` variable 
 
 ```javascript
 REACT_APP_apiKey=<refer to firebase config>
@@ -12,3 +12,4 @@ REACT_APP_messagingSenderId=<refer to firebase config>
 REACT_APP_appId=<refer to firebase config>
 ```
 - `$ npm run start` to start the Frontend service
+- Accessible via `http://localhost:3000`
